@@ -35,7 +35,7 @@ MAGColumnTypes = {
 
 def query2igraph(queryID, path = "../query-results"):
     
-	File = "%s/%s.csv"%(path,queryID)
+	nodesFile = "%s/%s.csv"%(path,queryID)
 	edgesFile = "%s/%s_edges.csv"%(path,queryID)
         
 	edgesData = pd.read_csv(edgesFile)
