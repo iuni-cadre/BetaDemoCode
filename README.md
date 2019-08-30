@@ -14,15 +14,12 @@ The tutorial is consists of 5 demos:
 ```
 Notebook: demo04.ipynb 
 ```
-
 * Input files: "/packages/issi_data_package/output_files/data/774e7eb6-6ac7-4dd5-9339-531b746cb8ec.csv"
 "/packages/issi_data_package/output_files/data/2ndOrderEdges.csv"
 ```
 To get the input files in the right path, run the "ISSI Data Package" from the CADRE Marketplace.
 ```
 * Output files: N/A
-
-***
 
 The first 2 cells of the notebook read papers and 2nd degree edge list (2nd-degree queires is disabled at the GUI query-builde) from the input files.
 
@@ -33,18 +30,16 @@ Cell 7 replicates the original code for indirect citations from Yi Bu's slides "
 The last cell produce a simple network visualization around the focal paper ""
 
 ***
-
 ```
 Non-interactive/2nd-degree-analysis.ipynb
 ```
 * Input files: "/packages/issi_data_package/output_files/data/774e7eb6-6ac7-4dd5-9339-531b746cb8ec.csv"
 "/packages/issi_data_package/output_files/data/2ndOrderEdges.csv"
-```
-To get the input files in the right path, run the "ISSI Data Package" from the CADRE Marketplace.
-```
+
 * Output files: N/A
 
-***
+This notebook illustrates how to bring scalable computing resources to the CADRE notebook environment. 
+
 
 ### Demo 5: Full reproducible pipeline in the notebook environment (hosted by BinderHub): 
 https://github.com/iuni-cadre/ReproducibilityDemo/wiki/A-demo-of-reproducibility
