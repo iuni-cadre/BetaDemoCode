@@ -143,7 +143,7 @@ async function startVisualization() {
 				
 	var simulation = d3.forceSimulation(nodes)
 		.force("charge", d3.forceManyBody()
-			.strength(-100)
+			.strength(-300)
 			// .distanceMin(0.1)
 			// .theta(0.5)
 
@@ -155,8 +155,8 @@ async function startVisualization() {
 		.force("x", d3.forceX().strength(0.02))
 		.force("y", d3.forceY().strength(0.02))
 		// .alphaTarget(10)
-		.alphaDecay(0.0005)
-		.velocityDecay(0.4)
+		.alphaDecay(0.0055)
+		.velocityDecay(0.6)
 		.on("tick", redraw);
 
 
