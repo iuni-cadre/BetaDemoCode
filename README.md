@@ -17,8 +17,9 @@ Non-interactive/2nd-degree-analysis.ipynb
 
 * Input files: "/packages/issi_data_package/output_files/data/774e7eb6-6ac7-4dd5-9339-531b746cb8ec.csv"
 "/packages/issi_data_package/output_files/data/2ndOrderEdges.csv"
+```
 To get the input files in the right path, run the "ISSI Data Package" from the CADRE Marketplace.
-
+```
 * Output files: N/A
 
 ***
