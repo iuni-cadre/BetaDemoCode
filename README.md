@@ -10,7 +10,7 @@ The tutorial is consists of 5 demos:
 
 ### Demo 3: Advanced interactive visualizations.
 
-### Demo 4: Bring scalable computing resources to CADRE. In the notebook environment (databricks backend).
+### Demo 4: Scalable query and bring additional computational resources to CADRE notebook (databricks backend).
 ```
 Notebook: demo04.ipynb 
 ```
@@ -33,6 +33,8 @@ The last cell produce a simple network visualization around the focal paper ""
 ```
 Non-interactive/2nd-degree-analysis.ipynb
 ```
+In the notebook environment (databricks backend).
+
 * Input files: "/packages/issi_data_package/output_files/data/774e7eb6-6ac7-4dd5-9339-531b746cb8ec.csv"
 "/packages/issi_data_package/output_files/data/2ndOrderEdges.csv"
 
