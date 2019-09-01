@@ -25,7 +25,7 @@ In the notebook environment (databricks backend).
 
 This notebook illustrates how to bring scalable computing resources to the CADRE notebook environment. The notebook requres external credentals and will not be runnable for the audence. 
 
-It will illustrate how to generate edge lists from large citation data set using distributed cluster and the result is delivered through the "ISSI Data Package".
+We will illustrate how to generate edge lists from large citation data set using distributed cluster and the result is delivered through the "ISSI Data Package".
 
 ```
 Notebook: demo04.ipynb 
