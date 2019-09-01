@@ -11,19 +11,16 @@ The tutorial is consists of 5 demos:
 ### Demo 3: Advanced interactive visualizations.
 
 ### Demo 4: Scalable query and bring additional computational resources to CADRE notebook (databricks backend).
-
+This notebook illustrates how to bring scalable computing resources to the CADRE notebook environment. The notebook requres external credentals and will not be runnable for the audence. 
 ***
 ```
-Non-interactive/2nd-degree-analysis.ipynb
+Notebook: Non-interactive/2nd-degree-analysis.ipynb
 ```
-In the notebook environment (databricks backend).
 
 * Input files: "/packages/issi_data_package/output_files/data/774e7eb6-6ac7-4dd5-9339-531b746cb8ec.csv"
 "/packages/issi_data_package/output_files/data/2ndOrderEdges.csv"
 
 * Output files: To get the input files in the right path, run the "ISSI Data Package" from the CADRE Marketplace.
-
-This notebook illustrates how to bring scalable computing resources to the CADRE notebook environment. The notebook requres external credentals and will not be runnable for the audence. 
 
 We will illustrate how to generate edge lists from large citation data set using distributed cluster and the result is delivered through the "ISSI Data Package".
 
