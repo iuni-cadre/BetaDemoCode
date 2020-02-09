@@ -1,17 +1,11 @@
-# ISSI 2019 CADRE Tutorial 
-This is a repository for code and demo of ISSI 2019 CADRE Tutorial. Event website:
-https://cadre.iu.edu/news-and-events/events/rome
+# CADRE Alpha Release Demo
+This is the code repository for the Version 0.1.0-alpha release. Event website:
+https://iuni-cadre.github.io/AlphaDemo/
 
-The tutorial is consists of 5 demos:
+The repo is consists of 2 demos:
 
-### Demo 1: Query on the GUI-query builder (step by step using drop-down menus) with simple plotting in notebook.
-
-### Demo 2: Visualizations and word clouds. Illustrate how we can reproduce with packages and interact with the code in a notebook environment.
-
-### Demo 3: Advanced interactive visualizations.
-
-### Demo 4: Scalable query and bring additional computational resources to CADRE notebook (databricks backend).
-The first notebook illustrates how to bring scalable computing resources to the CADRE notebook environment. The notebook requres external credentals and will not be reproducible for the audience. 
+### Demo01: Data access and reproducible packages (Hutchinson). How can you access the data and analyze them? How can you make our analysis reproducible?
+### Demo02: Networks and visualizations (Silva). How can you build networks from query results and visualize them 
 ```
 Notebook: Non-interactive/2nd-degree-analysis.ipynb
 ```
