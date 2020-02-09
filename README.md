@@ -6,8 +6,7 @@ The repo is consists of 2 demos:
 
 ---
 title: "Demo02: Networks and visualizations (Silva)"
-teaching: 25
-exercises: 0
+
 questions:
 - "How can you build networks from query results and visualize them"
 objectives:
