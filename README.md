@@ -31,10 +31,6 @@ objectives:
 - "Explain how you can reproduce the result using public packages, with your own data"
 - "Demonstrate advanced intreactive visualizations"
 ```
-```
-To get the input files in the right path, run the "ISSI Data Package" from the CADRE Marketplace.
-```
-* Output files: N/A
 ---
 
 
