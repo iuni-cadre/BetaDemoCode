@@ -7,7 +7,7 @@ https://iuni-cadre.github.io/BetaDemo/
 The repo is consists of 2 demos:
 
 ---
-## Demo01: Data access and reproducible packages (Hutchinson)
+## Demo01: Data access and packages (Hutchinson)
 ```
 questions:
 - "How can you access the data and analyze them? How can you make your analysis reproducible?"
@@ -23,7 +23,7 @@ objectives:
 
 ---
 
-## Demo02: Networks and visualizations (Xiaoran)
+## Demo02: Networks, visualizations and reproducibility (Xiaoran)
 ```
 questions:
 - "How can you build networks from query results and visualize them"
