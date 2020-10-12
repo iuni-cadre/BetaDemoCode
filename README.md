@@ -1,8 +1,8 @@
-# CADRE Alpha Release Demo
-This is the code repository for the Version 0.1.0-alpha release. It will be automatically pulled to your personal space, viewable in your Jupyter Notebook https://cadre.iu.edu/gateway/jupyter
+# CADRE Beta Release Demo
+This is the code repository for the Version 0.3.0-beta release. It will be automatically pulled to your personal space, viewable in your Jupyter Notebook https://cadre.iu.edu/gateway/jupyter
 
 For more detailed instructions, please visit the event website:
-https://iuni-cadre.github.io/AlphaDemo/
+https://iuni-cadre.github.io/BetaDemo/
 
 The repo is consists of 2 demos:
 
@@ -23,7 +23,7 @@ objectives:
 
 ---
 
-## Demo02: Networks and visualizations (Silva)
+## Demo02: Networks and visualizations (Xiaoran)
 ```
 questions:
 - "How can you build networks from query results and visualize them"
