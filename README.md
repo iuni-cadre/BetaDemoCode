@@ -1,5 +1,5 @@
 # CADRE Beta Release Demo
-This is the code repository for the Version 0.3.0-beta release. It will be automatically pulled to your personal space, viewable in your Jupyter Notebook https://cadre.iu.edu/gateway/jupyter
+This is the code repository for the Version 1.0.0-beta release. It will be automatically pulled to your personal space, viewable in your Jupyter Notebook https://cadre.iu.edu/gateway/jupyter
 
 For more detailed instructions, please visit the event website:
 https://iuni-cadre.github.io/BetaDemo/
