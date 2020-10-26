@@ -6,15 +6,12 @@ import sys
 def create_plot(input_files, input_dir, output_dir):
     # read csv file
     j_of_inf = pd.read_csv(input_dir + '/' + input_files[0])
-    order = [1, 0]
-    inf_yd = j_of_inf[[j_of_inf.columns[i] for i in order]]
-    inf = inf_yd.groupby(['Paper_year']).count()
-    inf.reset_index(inplace=True)
-    inf = inf.sort_values('Paper_year')
-    inf = inf[1:-1]
-    inf.columns=["Year","Total"]
-
-    inf.plot(x='Year', y=['Total'], color=['blue'], kind='line')
+    j_of_inf.columns = j_of_inf.columns.str.strip()
+    inf = j_of_inf.groupby(['Paper_year']).count() 
+    inf2 = inf['Paper_paperTitle']
+    inf2 = inf2[1:-1]
+    inf2.columns=["Year","Total"]    
+    inf2.plot(x='Year', y=['Total'], color=['blue'], kind='line')
     inf_plot = plt.legend(loc=2)
     inf_plot = plt.ylabel(ylabel='No. of Publications')
     inf_plot = plt.title(label='Sum of Total Articles')
