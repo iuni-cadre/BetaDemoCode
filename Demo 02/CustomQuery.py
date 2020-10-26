@@ -1,50 +1,47 @@
-# ---
-# jupyter:
-#   jupytext:
-#     formats: ipynb,py:light
-#     text_representation:
-#       extension: .py
-#       format_name: light
-#       format_version: '1.5'
-#       jupytext_version: 1.3.3
-#   kernelspec:
-#     display_name: Python 3
-#     language: python
-#     name: python3
-# ---
-
-# # Co-Author Network from Microsoft Academic Graph
-#
-# Requires an actual path to be included as `path_to_data` in the first cell below. This csv must contain columns named as referenced below.
-#
-# ### Extracting data from CSV
-#
-# This first cell will fill out several dictionaries with data from the csv file:
-# * **data_by_id**: article information keyed to article id.
-# * **data_by_author**: author data keyed to author id
-
-# + jupyter={"outputs_hidden": false}
 import os
 import csv
 import sys
 from itertools import combinations
 import networkx as nx
 import csv
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import collections  as mc
+from networkx.algorithms import community
+from networkx.algorithms.community import greedy_modularity_communities
+from networkx import relabel
 
-_input_filenames = []
-_input_dir = '.'
-_output_dir = '.'
+def create_coauthor_network(input_filenames, input_dir, output_dir):
+    path_to_data = input_dir + '/' + input_filenames[0]
+    converterS = {col: lambda x: "" if x=="[]" else x.strip("[]").split(", ") for col in ['Author_authorId','Author_displayName','Author_lastKnownAffiliationId']}
+    queryResults = pd.read_csv(path_to_data,converters=converterS)
 
-data_by_id = {}
-data_by_author = {}
+    # + jupyter={"outputs_hidden": true}
+    #queryResults[queryResults['Author_lastKnownAffiliationId']]
+    queryResults["LastAffiliateCount"] = queryResults['Author_lastKnownAffiliationId'].apply(len)
+    queryResults["AuthorCount"] = queryResults['Author_authorId'].apply(len)
+    queryResults[queryResults['LastAffiliateCount']==0]
 
-path_to_data = ''
-G = nx.Graph()
+    # + jupyter={"outputs_hidden": true}
+    queryResults2 = queryResults.loc[queryResults["LastAffiliateCount"]==queryResults["AuthorCount"],:].copy()
 
-def create_coauthor_network(input_file_name):
-    path_to_data = '{0}/{1}'.format(_input_dir, input_file_name)
-    # Read in source data and iterate row by row.
-    with open(path_to_data) as datafile:
+    # + jupyter={"outputs_hidden": true}
+    Author_lastKnownAffiliationId = queryResults2.explode('Author_lastKnownAffiliationId')[['Author_lastKnownAffiliationId']]
+    Author_displayName = queryResults2.explode('Author_displayName')[['Author_displayName']]
+    PApairs = queryResults2.drop(['Author_lastKnownAffiliationId','Author_displayName'], axis = 1).explode('Author_authorId')
+    PApairs2 = pd.concat([Author_displayName,Author_lastKnownAffiliationId,PApairs], axis=1)
+    # -
+    PApairs3 = PApairs2[["Author_displayName","Author_lastKnownAffiliationId","Author_authorId","Paper_doi","Paper_originalTitle","Paper_paperId","Paper_year"]]
+    PApairs3.columns = ['author_name','last_known_affiliation_id','author_id','doi','original_title','paper_id','year']
+    
+    output_file = 'testInputTransformed.csv'
+    PApairs3.to_csv(output_file)
+
+    data_by_id = {}
+    data_by_author = {}
+
+    with open(output_file) as datafile:
         reader = csv.DictReader(datafile)
         # Each row contains one article author; thus each article will have as many rows as authors.
         for row in reader:
@@ -61,17 +58,15 @@ def create_coauthor_network(input_file_name):
             if author_id not in data_by_author:
                 data_by_author[author_id] = {
                     "author_name": [row["author_name"]],
-                    "affiliation_id": [row["affiliation_id"]],
                     "last_known_affiliation_id": [row["last_known_affiliation_id"]],
-                    "affiliation_name": [row["affiliation_name"]],
                     "doi": [row["doi"]] if row["doi"] != "" else [],
                     "paper_id": [row["paper_id"]]
                 }
 
             # If author is already in the dict, append additional affiliation and article info.
             else:
-                for key in ["author_name", "affiliation_id", "paper_id",
-                            "last_known_affiliation_id", "doi", "affiliation_name"]:
+                for key in ["author_name", "paper_id",
+                            "last_known_affiliation_id", "doi"]:
                     if row[key] not in data_by_author[author_id][key]:
                         data_by_author[author_id][key].append(row[key])
 
@@ -79,16 +74,13 @@ def create_coauthor_network(input_file_name):
             if id_ not in data_by_id:
                 data_by_id[id_] = {
                     "doi": row["doi"],
-                    "doc_type": row["doc_type"],
                     "title": row["original_title"],
                     "year": row["year"],
                     "authors": [
                         {
                             "author_id": row["author_id"],
                             "name": row["author_name"],
-                            "last_known_affiliation_id": [row["last_known_affiliation_id"]],
-                            "affiliation_id": [row["affiliation_id"]],
-                            "affiliation_name": [row["affiliation_name"]],
+                            "last_known_affiliation_id": [row["last_known_affiliation_id"]]
                         }
                     ],
                     "all_author_ids": [row["author_id"]]
@@ -98,13 +90,7 @@ def create_coauthor_network(input_file_name):
                 if author_id in data_by_id[id_]["all_author_ids"]:
                     for a in data_by_id[id_]["authors"]:
                         if a["author_id"] == author_id:
-                            affiliation_id = row["affiliation_id"]
                             last_known = row["last_known_affiliation_id"]
-                            normalized = row["affiliation_name"]
-                            if affiliation_id not in a["affiliation_id"]:
-                                a["affiliation_id"].append(affiliation_id)
-                                a["affiliation_name"].append(normalized)
-
                             if last_known not in a["last_known_affiliation_id"]:
                                 a["last_known_affiliation_id"].append(last_known)
 
@@ -112,60 +98,13 @@ def create_coauthor_network(input_file_name):
                     new_author = {
                         "author_id": row["author_id"],
                         "name": row["author_name"],
-                        "last_known_affiliation_id": [row["last_known_affiliation_id"]],
-                        "affiliation_id": [row["affiliation_id"]],
-                        "affiliation_name": [row["affiliation_name"]],
+                        "last_known_affiliation_id": [row["last_known_affiliation_id"]]
                     }
                     data_by_id[id_]["authors"].append(new_author)
                     data_by_id[id_]["all_author_ids"].append(author_id)
-                    # -
 
-    # #### Check values for accuracy / highlight obvious issues
-
-    # + jupyter={"outputs_hidden": false}
-    len(data_by_author)
-
-    # + jupyter={"outputs_hidden": false}
-    list(data_by_author.keys())[0]
-
-    # + jupyter={"outputs_hidden": false}
-    data_by_author['2020620411']
-    # -
-
-    # Many authors have multiple institutional affiliations:
-
-    # + jupyter={"outputs_hidden": false}
-    count = 0
-    for author, data in data_by_author.items():
-        if len(data["affiliation_name"]) > 1:
-            count += 1
-            # print(author, data)
-    print(count, "authors with multiple affiliations")
-    # -
-
-    # Compare total number of rows to number of unique rows to roughly estimate authors per paper.
-
-    # + jupyter={"outputs_hidden": false}
-    ids = []
-
-    with open(path_to_data) as datafile:
-
-        reader = csv.DictReader(datafile)
-        for row in reader:
-            id_ = row["paper_id"]
-            ids.append(id_)
-    print(len(set(ids)), "total papers,", len(ids), "total authors")
-    # -
-
-    # ### Building graph from author and article data
-
-    # First, create the complete graph of all co-authorship.
-
-    # + jupyter={"outputs_hidden": false}
-
-
+    G = nx.Graph()
     for id_, data in data_by_id.items():
-
         authors = data["all_author_ids"]
         """
         Iterate over all combinations of authors per paper.
@@ -189,7 +128,6 @@ def create_coauthor_network(input_file_name):
 
     # Go back and iterate over all nodes created, adding affiliation/count/author data.
     for author, data in G.nodes(data=True):
-        data["affiliation"] = data_by_author[author]["affiliation_name"][0]
         data["papers"] = "<br>\n".join(data_by_author[author]["doi"])
         data["name"] = ", ".join(data_by_author[author]["author_name"])
         data["count"] = len(data_by_author[author]["paper_id"])
@@ -212,33 +150,19 @@ def create_coauthor_network(input_file_name):
     view = nx.subgraph_view(G, filter_edge=filter_edge)
     subview = nx.subgraph_view(view, filter_node=filter_node)
 
-    # + jupyter={"outputs_hidden": false}
-    len(subview.edges()), len(subview.nodes())
-    # -
-
-    # Centrality Measures
-
-    # ### Output graph data as separate files containing `nodes` and `edges` for display in `flourish.studio`.
-    #
-    # Our platform for visualizing the graph, `flourish.studio` requires edge and node lists as comma-separated rows
-
-    # + jupyter={"outputs_hidden": false}
-    mag_edges_file = '{0}/{1}'.format(_output_dir, 'mag_edges.tsv')
-    mag_nodes_file = '{0}/{1}'.format(_output_dir, 'mag_nodes.tsv')
-    nx.write_edgelist(subview, mag_edges_file, delimiter="\t", data=["weight"])
-    with open(mag_nodes_file, "w") as f:
-        fieldnames = ["id", "affiliation", "papers", "name", "count"]
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        for n, data in list(subview.nodes(data=True)):
-            row = data
-            row["id"] = n
-            writer.writerow(row)
-
-    # + jupyter={"outputs_hidden": false}
-    max([subview[e][v]["weight"] for e, v in subview.edges])
-
-
+    subgraph = relabel.convert_node_labels_to_integers(subview)
+    c = list(greedy_modularity_communities(subgraph))
+    # show first 5 graphs
+    pos = nx.spring_layout(subgraph,k=5/np.sqrt(len(subgraph)))
+    colors = np.array(['b','r', 'g', 'y'])
+    label = np.zeros(len(subgraph),dtype=int)
+    label[list(map(int, c[0]))] = 1
+    label[list(map(int, c[1]))] = 2
+    label[list(map(int, c[2]))] = 3
+    plt.figure(figsize=(10,10))
+    nx.draw(subgraph, node_color=colors[label], with_labels=True, pos=pos)
+    plt.savefig(output_dir+'/layout.pdf')
+    
 if __name__ == "__main__":
     """
     How to run script:
@@ -249,7 +173,7 @@ if __name__ == "__main__":
         counts the lines from each file in /efs/input (which will be available within docker)
     """
 
-    #Required cadre boilerplate to get commandline arguments:
+    # Required cadre boilerplate to get commandline arguments:
     try:
         _input_filenames = sys.argv[1].split(',')
         _input_dir = sys.argv[2]
@@ -261,5 +185,5 @@ if __name__ == "__main__":
         print("Unknown Error")
         sys.exit(1)
 
-    for filename in _input_filenames:
-        create_coauthor_network(filename)
+    #  calling create_plot function
+    create_coauthor_network(_input_filenames, _input_dir, _output_dir)
