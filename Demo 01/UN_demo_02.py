@@ -7,8 +7,18 @@ def create_plot(input_files, input_dir, output_dir):
     # read csv file
     j_of_inf = pd.read_csv(input_dir + '/' + input_files[0])
     j_of_inf.columns = j_of_inf.columns.str.strip()
-    inf = j_of_inf.groupby(['Paper_year']).count() 
-    inf2 = inf['Paper_paperTitle']
+    
+    if 'Paper_year' in j_of_inf.columns:
+        inf = j_of_inf.groupby(['Paper_year']).count()
+    else:
+        inf = j_of_inf.groupby(['Paper_publicationYear']).count()
+ 
+    
+    if 'Paper_paperTitle' in j_of_inf.columns:
+        inf2 = inf['Paper_paperTitle']
+    else:
+        inf2 = inf['Paper_articleTitle']
+    
     inf2 = inf2[1:-1]
     inf2.columns=["Year","Total"]    
     inf2.plot(x='Year', y=['Total'], color=['blue'], kind='line')
